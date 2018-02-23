@@ -79,6 +79,7 @@ use Drupal\embederator\EmbederatorInterface;
  *   fieldable = TRUE,
  *   base_table = "embederator",
  *   handlers = {
+ *     "view_builder" = "Drupal\embederator\Entity\EmbederatorViewBuilder",
  *     "list_builder" = "Drupal\embederator\Entity\Controller\EmbederatorListBuilder",
  *     "form" = {
  *       "default" = "Drupal\embederator\Form\EmbederatorForm",

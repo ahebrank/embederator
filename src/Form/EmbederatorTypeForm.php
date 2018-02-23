@@ -44,14 +44,16 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
 
     $form['embed_markup'] = [
         '#title' => $this->t('Embed markup'),
-        '#type' => 'textarea',
+        '#type' => 'text_format',
+        '#format' => 'full_html',
         '#default_value' => $entity_type->getMarkup(),
         '#description' => $this->t('HTML markup for embed. Use tokens for unique values, e.g., [embederator:embed_id]'),
+        '#rows' => 20,
     ];
     if (\Drupal::moduleHandler()->moduleExists('token')) {
-        $form['embed_markup']['token_browser'] = [
+        $form['token_browser'] = [
             '#theme' => 'token_tree_link',  
-            '#token_types' => ['user'],
+            '#token_types' => ['embederator'],
             '#dialog' => TRUE,
         ];
     }

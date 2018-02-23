@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Preprocessors and theme functions of Aggregator module.
+ * Preprocessors and theme functions of embederator module.
  */
 
-use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
 
 /*
@@ -20,21 +20,7 @@ use Drupal\Core\Render\Element;
 function template_preprocess_embederator(&$variables) {
     $entity = $variables['elements']['#embederator'];
     
-    $token_service = \Drupal::token();
-        
-    /**
-    * The embederator type.
-    *
-    * @var \Drupal\embederator\Entity\EmbederatorType
-    */
-    $embederator_type =  \Drupal::entityTypeManager()->getStorage('embederator_type')->load($entity->bundle());
-
-    // find/replace on the markup
-    $orig_markup = $embederator_type->getMarkup();
-    $markup = $token_service->replace($orig_markup, array('embederator' => $entity));
-
-    $variables['embed'] = $markup;
-    $variables['type'] = $entity->bundle();
+    $variables['embederator_type'] = Html::cleanCssIdentifier($entity->bundle());
 
     // Helpful $content variable for templates.
     foreach (Element::children($variables['elements']) as $key) {

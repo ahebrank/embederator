@@ -19,13 +19,17 @@
  * @ingroup themeable
  */
 #}
-<article{{ attributes }}>
+{% set classes = [
+  'embederator', 
+  embederator_type? 'embederator--' ~ embederator_type,
+] %}
+<article{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
     {% if content.label %}
     {{ content.label }}
     {% endif %}
   {{ title_suffix }}
-  <div class="embed {{ type }}">
-    {{ embed|raw }}
+  <div class="embed">
+    {{ content|without('label', 'embed_id') }}
   </div>
 </article>
