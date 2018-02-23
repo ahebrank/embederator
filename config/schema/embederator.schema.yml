@@ -1,0 +1,16 @@
+embederator.embederator_type.*:
+  type: config_entity
+  label: 'Embederator Type settings'
+  mapping:
+    id:
+      type: string
+      label: 'Machine-readable name'
+    uuid:
+      type: stype
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    embed_markup:
+      type: string_long
+      label: 'Label'
