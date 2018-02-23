@@ -9,7 +9,7 @@ entity.embederator.canonical:
     _entity_access: 'embederator.view'
 
 entity.embederator.collection:
-  path: '/embederator/list'
+  path: '/admin/content/embederator'
   defaults:
   # Calls the list controller, defined in the annotation of the embederator entity.
     _entity_list: 'embederator'
@@ -21,7 +21,7 @@ entity.embederator.collection:
     _permission: 'view embederator entity'
 
 embederator.add_overview:
-  path: '/embederator/add'
+  path: '/admin/content/embederator/add'
   defaults:
     _controller: '\Drupal\embederator\Entity\Controller\EmbederatorController::addInterstitial'
     _title: 'Add embed'
@@ -31,7 +31,7 @@ embederator.add_overview:
     _entity_create_access: 'embederator'
 
 embederator.add:
-  path: '/embederator/add/{embederator_type}'
+  path: '/admin/content/embederator/add/{embederator_type}'
   defaults:
     _controller: '\Drupal\embederator\Entity\Controller\EmbederatorController::add'
     _title_callback: '\Drupal\embederator\Entity\Controller\EmbederatorController::addPageTitle'
@@ -41,7 +41,7 @@ embederator.add:
     _entity_create_access: 'embederator'
 
 entity.embederator.edit_form:
-  path: '/embederator/{embederator}/edit'
+  path: '/admin/content/embederator/{embederator}/edit'
   defaults:
   # Calls the form.edit controller, defined in the embederator entity.
     _entity_form: embederator.edit
@@ -52,7 +52,7 @@ entity.embederator.edit_form:
     _entity_access: 'embederator.edit'
 
 entity.embederator.delete_form:
-  path: '/embederator/{embederator}/delete'
+  path: '/admin/content/embederator/{embederator}/delete'
   defaults:
     # Calls the form.delete controller, defined in the embederator entity.
     _entity_form: embederator.delete

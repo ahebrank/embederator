@@ -19,3 +19,9 @@ embederator.delete_confirm:
   base_route:  entity.embederator.canonical
   title: Delete
   weight: 10
+
+embederator.list:
+  route_name: entity.embederator.collection
+  title: 'Embeds'
+  base_route: system.admin_content
+  weight: 100
