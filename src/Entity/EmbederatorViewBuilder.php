@@ -16,8 +16,8 @@ class EmbederatorViewBuilder extends EntityViewBuilder {
         }
         parent::buildComponents($build, $entities, $displays, $view_mode);
 
+        /* @todo: inject this service */
         $token_service = \Drupal::token();
-        $viewBuilder = $this->entityManager->getViewBuilder('embederator_type');
 
         foreach ($entities as $id => $entity) {
             /**
