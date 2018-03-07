@@ -45,8 +45,8 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
     $form['embed_markup'] = [
         '#title' => $this->t('Embed markup'),
         '#type' => 'text_format',
-        '#format' => 'full_html',
-        '#default_value' => $entity_type->getMarkup(),
+        '#format' => $entity_type->getMarkupFormat(),
+        '#default_value' => $entity_type->getMarkupHtml(),
         '#description' => $this->t('HTML markup for embed. Use tokens for unique values, e.g., [embederator:embed_id]'),
         '#rows' => 20,
     ];

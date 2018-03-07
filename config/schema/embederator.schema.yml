@@ -12,5 +12,12 @@ embederator.embederator_type.*:
       type: label
       label: 'Label'
     embed_markup:
-      type: string_long
-      label: 'Label'
+      type: mapping
+      label: 'Markup'
+      mapping:
+        value:
+          type: string_long
+          label: 'Value'
+        format:
+          type: string
+          label: 'Format'

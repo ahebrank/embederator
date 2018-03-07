@@ -90,11 +90,20 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
   }
 
   public function getMarkup() {
-      return $this->embed_markup;
+    return $this->embed_markup;
   }
 
-  public function setMarkup($markup) {
-      $this->embed_markup = $markup;
-      return $this;
+  public function getMarkupHtml() {
+    return $this->getMarkup()['value'];
+  }
+
+  public function getMarkupFormat() {
+    return $this->getMarkup()['format'];
+  }
+
+  public function setMarkup($value, $format) {
+    $this->embed_markup->value = $value;
+    $this->embed_markup->format = $format;
+    return $this;
   }
 }
