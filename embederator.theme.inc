@@ -27,3 +27,27 @@ function template_preprocess_embederator(&$variables) {
         $variables['content'][$key] = $variables['elements'][$key];
     }
 }
+
+/**
+ * Prepares variables for list of available embderator type templates.
+ *
+ * Default template: embederator-add-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content: An array of embederator types.
+ *
+ * @see node_add_page()
+ */
+function template_preprocess_embederator_add_list(&$variables) {
+    $variables['types'] = [];
+    if (!empty($variables['content'])) {
+      foreach ($variables['content'] as $type) {
+        $variables['types'][$type->id()]['label'] = $type->label();
+        $variables['types'][$type->id()]['url'] = \Drupal::url('embederator.add', ['embederator_type' => $type->id()]);
+        $variables['types'][$type->id()]['description'] = [
+            '#markup' => $type->getDescription(),
+        ];
+      }
+    }
+  }
