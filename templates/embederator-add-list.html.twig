@@ -16,17 +16,16 @@
  */
 #}
 {% if types is not empty %}
-  <dl>
+  <ul class="admin-list">
     {% for type in types %}
-      <dt>{{ type.add_link }}</dt>
-      <dd>{{ type.description }}</dd>
+      <li class="clearfix"><a href="{{ type.url }}"><span class="label">{{ type.label }}</span><div class="description">{{ type.description }}</div></a></li>
     {% endfor %}
-  </dl>
+  </ul>
 {% else %}
   <p>
     {% set create_content = path('embederator_type.add') %}
     {% trans %}
-      You have not created any emebderator types yet. Go to the <a href="{{ create_embederator }}">content type creation page</a> to add a new content type.
+      You have not created any emebderator types yet. Go to the <a href="{{ create_embederator }}">embederator type creation page</a> to add a new content type.
     {% endtrans %}
   </p>
 {% endif %}
