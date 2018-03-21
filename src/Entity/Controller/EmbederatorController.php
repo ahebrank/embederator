@@ -54,7 +54,7 @@ class EmbederatorController extends ControllerBase implements ContainerInjection
   public function addInterstitial() {
     $build = [
       // hopefully we can steal this theme
-      '#theme' => 'node_add_list',
+      '#theme' => 'embederator_add_list',
       '#cache' => [
         'tags' => $this->entityManager()->getDefinition('embederator_type')->getListCacheTags(),
       ],
