@@ -95,7 +95,7 @@ use Drupal\embederator\EmbederatorInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid",
- *     "bundle" = "bundle",
+ *     "bundle" = "type",
  *   },
  *   links = {
  *     "canonical" = "/embederator/{embederator}",
@@ -190,6 +190,13 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
   public function setEmbedId($embed_id) {
     $this->set('embed_id', $embed_id);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getType() {
+    return $this->bundle();
   }
 
   /**
