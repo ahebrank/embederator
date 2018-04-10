@@ -89,7 +89,7 @@ class EmbederatorController extends ControllerBase implements ContainerInjection
    */
   public function add(EmbederatorTypeInterface $embederator_type) {
     $embed = $this->entityManager()->getStorage('embederator')->create([
-      'bundle' => $embederator_type->id(),
+      'type' => $embederator_type->id(),
     ]);
 
     $form = $this->entityFormBuilder()->getForm($embed);
