@@ -79,7 +79,7 @@ use Drupal\embederator\EmbederatorInterface;
  *   fieldable = TRUE,
  *   base_table = "embederator",
  *   handlers = {
- *     "view_builder" = "Drupal\embederator\Entity\EmbederatorViewBuilder",
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\embederator\Entity\Controller\EmbederatorListBuilder",
  *     "form" = {
  *       "default" = "Drupal\embederator\Form\EmbederatorForm",
@@ -226,12 +226,11 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
       ->setDefaultValue(NULL)
       ->setDisplayOptions('view', [
         'label' => 'above',
-        'type' => 'string',
-        'weight' => -6,
+        'type' => 'hidden',
       ])
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -6,
+        'weight' => -8,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -247,8 +246,8 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
       // Set no default value.
       ->setDefaultValue(NULL)
       ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'string',
+        'label' => 'hidden',
+        'type' => 'embederator_default',
         'weight' => -6,
       ])
       ->setDisplayOptions('form', [

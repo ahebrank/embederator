@@ -47,7 +47,7 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
         '#type' => 'text_format',
         '#format' => $entity_type->getMarkupFormat(),
         '#default_value' => $entity_type->getMarkupHtml(),
-        '#description' => $this->t('HTML markup for embed. Use tokens for unique values, e.g., [embederator:embed_id]'),
+        '#description' => $this->t('HTML markup for embed (set to Full HTML to avoid markup filters). Use tokens for unique values, e.g., [embederator:embed_id]'),
         '#rows' => 20,
     ];
     if (\Drupal::moduleHandler()->moduleExists('token')) {
@@ -59,21 +59,6 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
     }
 
     return $this->protectBundleIdElement($form);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function actions(array $form, FormStateInterface $form_state) {
-    $actions = parent::actions($form, $form_state);
-
-    if (\Drupal::moduleHandler()->moduleExists('field_ui') && $this->getEntity()->isNew()) {
-      $actions['save_continue'] = $actions['submit'];
-      $actions['save_continue']['#value'] = $this->t('Save and manage fields');
-      $actions['save_continue']['#submit'][] = [$this, 'redirectToFieldUi'];
-    }
-
-    return $actions;
   }
 
   /**

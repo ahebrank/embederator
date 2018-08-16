@@ -73,7 +73,13 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
    * @var string
    */
   protected $embed_markup;
-  
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    return $this->id;
+  }
   
   /**
    * {@inheritdoc}
