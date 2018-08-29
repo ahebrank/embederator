@@ -52,7 +52,9 @@ class EmbederatorFormatter extends FormatterBase {
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     // limit to embederator
-    return (($field_definition->getProvider() == 'embederator') 
+    return (method_exists($field_definition, 'getProvider')
+            && ($field_definition->getProvider() == 'embederator') 
+            && method_exists($field_definition, 'getName')
             && ($field_definition->getName() == 'embed_id'));
   }
 
