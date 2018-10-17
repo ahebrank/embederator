@@ -6,14 +6,14 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 
 /**
- * Class EmbederatorTypeListBuilder
+ * Class EmbederatorTypeListBuilder.
  */
 class EmbederatorTypeListBuilder extends EntityListBuilder {
 
   /**
    * {@inheritdoc}
    */
-  public function buildHeader(){
+  public function buildHeader() {
     $header['label'] = $this->t('Label');
     $header['id'] = $this->t('Machine name');
 
@@ -29,4 +29,5 @@ class EmbederatorTypeListBuilder extends EntityListBuilder {
 
     return $row + parent::buildRow($entity);
   }
+
 }

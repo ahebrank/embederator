@@ -1,45 +1,49 @@
 <?php
 
+/**
+ * @file
+ */
+
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
 function embederator_help($route_name, RouteMatchInterface $route_match) {
-    switch ($route_name) {
-      // Main module help for the embed_image_style_permissions module.
-      case 'help.page.embederator':
-        $output = '';
-        $output .= '<h3>' . t('About') . '</h3>';
-        $output .= '<p>' . t('Create and manage third-party embeds') . '</p>';
-        return $output;
-  
-      default:
-    }
+  switch ($route_name) {
+    // Main module help for the embed_image_style_permissions module.
+    case 'help.page.embederator':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Create and manage third-party embeds') . '</p>';
+      return $output;
+
+    default:
   }
+}
 
 /**
  * Implements hook_theme().
  */
 function embederator_theme() {
-    return [
-      'embederator' => [
-        'render element' => 'elements',
-        'file' => 'embederator.theme.inc',
-      ],
-      'embederator_add_list' => [
-        'variables' => ['content' => NULL],
-        'file' => 'embederator.theme.inc',
-      ],
-    ];
+  return [
+    'embederator' => [
+      'render element' => 'elements',
+      'file' => 'embederator.theme.inc',
+    ],
+    'embederator_add_list' => [
+      'variables' => ['content' => NULL],
+      'file' => 'embederator.theme.inc',
+    ],
+  ];
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function embederator_theme_suggestions_embederator_alter(array &$suggestions, array $variables, $hook) {
-    $type = $variables['elements']['#embederator']->bundle();
-    
-    // add a suggestion for the bundle
-    $suggestions[] = $hook . '__' . $type;
+  $type = $variables['elements']['#embederator']->bundle();
+
+  // Add a suggestion for the bundle.
+  $suggestions[] = $hook . '__' . $type;
 }

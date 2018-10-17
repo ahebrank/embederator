@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\embederator;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

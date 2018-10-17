@@ -6,6 +6,9 @@ use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_ui\FieldUI;
 
+/**
+ *
+ */
 class EmbederatorTypeForm extends BundleEntityFormBase {
 
   /**
@@ -36,26 +39,26 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
     ];
 
     $form['description'] = [
-        '#title' => $this->t('Description'),
-        '#type' => 'textarea',
-        '#default_value' => $entity_type->getDescription(),
-        '#description' => $this->t('Administrative description of this embed type'),
+      '#title' => $this->t('Description'),
+      '#type' => 'textarea',
+      '#default_value' => $entity_type->getDescription(),
+      '#description' => $this->t('Administrative description of this embed type'),
     ];
 
     $form['embed_markup'] = [
-        '#title' => $this->t('Embed markup'),
-        '#type' => 'text_format',
-        '#format' => $entity_type->getMarkupFormat(),
-        '#default_value' => $entity_type->getMarkupHtml(),
-        '#description' => $this->t('HTML markup for embed (set to Full HTML to avoid markup filters). Use tokens for unique values, e.g., [embederator:embed_id]'),
-        '#rows' => 20,
+      '#title' => $this->t('Embed markup'),
+      '#type' => 'text_format',
+      '#format' => $entity_type->getMarkupFormat(),
+      '#default_value' => $entity_type->getMarkupHtml(),
+      '#description' => $this->t('HTML markup for embed (set to Full HTML to avoid markup filters). Use tokens for unique values, e.g., [embederator:embed_id]'),
+      '#rows' => 20,
     ];
     if (\Drupal::moduleHandler()->moduleExists('token')) {
-        $form['token_browser'] = [
-            '#theme' => 'token_tree_link',  
-            '#token_types' => ['embederator'],
-            '#dialog' => TRUE,
-        ];
+      $form['token_browser'] = [
+        '#theme' => 'token_tree_link',
+        '#token_types' => ['embederator'],
+        '#dialog' => TRUE,
+      ];
     }
 
     return $this->protectBundleIdElement($form);
@@ -88,7 +91,7 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
    * Form submission handler to redirect to Manage fields page of Field UI.
    *
    * @param array $form
-   * @param FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    */
   public function redirectToFieldUi(array $form, FormStateInterface $form_state) {
     $route_info = FieldUI::getOverviewRouteInfo($this->entity->getEntityType()->getBundleOf(), $this->entity->id());
@@ -97,4 +100,5 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
       $form_state->setRedirectUrl($route_info);
     }
   }
+
 }

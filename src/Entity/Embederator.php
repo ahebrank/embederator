@@ -130,7 +130,6 @@ use Drupal\embederator\EmbederatorInterface;
  * they can by changed in code. In the definition we can define if the user with
  * the rights privileges can influence the presentation (view, edit) of each
  * field.
- *
  */
 class Embederator extends ContentEntityBase implements EmbederatorInterface {
 
@@ -212,12 +211,12 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    // label field for the embederator.
+    // Label field for the embederator.
     // We set display options for the view as well as the form.
     // Users with correct privileges can change the view and edit configuration.
     $fields['label'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Label'))
-      ->setDescription(t('The name of the embed entity.'))
+      ->setDescription(t('An administrative name for this instance of the embed (e.g., "Lunch Menu Form").'))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -235,10 +234,10 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // embed ID field
+    // Embed ID field.
     $fields['embed_id'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Embed ID'))
-      ->setDescription(t('Default unique identifier for the embed.'))
+      ->setDescription(t('Unique identifier for the embed (e.g., "POsLD3i6vNM")'))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -256,7 +255,6 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
-    
 
     // Owner field of the contact.
     // Entity reference field, holds the reference to the user object.
@@ -264,7 +262,7 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
     // The form presents a auto complete field for the user name.
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('User Name'))
-      ->setDescription(t('The Name of the associated user.'))
+      ->setDescription(t('The name of the associated user.'))
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       ->setDisplayOptions('view', [

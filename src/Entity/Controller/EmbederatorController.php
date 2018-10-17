@@ -2,7 +2,6 @@
 
 namespace Drupal\embederator\Entity\Controller;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -53,7 +52,7 @@ class EmbederatorController extends ControllerBase implements ContainerInjection
    */
   public function addInterstitial() {
     $build = [
-      // hopefully we can steal this theme
+      // Hopefully we can steal this theme.
       '#theme' => 'embederator_add_list',
       '#cache' => [
         'tags' => $this->entityManager()->getDefinition('embederator_type')->getListCacheTags(),
@@ -62,7 +61,7 @@ class EmbederatorController extends ControllerBase implements ContainerInjection
 
     $content = [];
 
-    // Add all the types
+    // Add all the types.
     foreach ($this->entityManager()->getStorage('embederator_type')->loadMultiple() as $type) {
       $content[$type->id()] = $type;
     }
@@ -109,4 +108,5 @@ class EmbederatorController extends ControllerBase implements ContainerInjection
   public function addPageTitle(EmbederatorTypeInterface $embederator_type) {
     return $this->t('Create @name', ['@name' => $embederator_type->label()]);
   }
+
 }

@@ -4,7 +4,6 @@ namespace Drupal\embederator\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
@@ -29,18 +28,18 @@ class EmbederatorFormatter extends FormatterBase {
     $token = \Drupal::service('token');
     $entity_manager = \Drupal::service('entity_type.manager');
 
-    // get the embed type markup
+    // Get the embed type markup.
     $entity = $items->getEntity();
-    $embederator_type =  $entity_manager->getStorage('embederator_type')->load($entity->getType());
+    $embederator_type = $entity_manager->getStorage('embederator_type')->load($entity->getType());
     $embed_pattern_field = $embederator_type->getMarkup();
 
     $elements = [];
     foreach ($items as $delta => $item) {
       $markup = $token->replace($embed_pattern_field['value'], ['embederator' => $entity]);
       $elements[$delta] = [
-          '#type' => 'processed_text',
-          '#text' => $markup,
-          '#format' => $embed_pattern_field['format'],
+        '#type' => 'processed_text',
+        '#text' => $markup,
+        '#format' => $embed_pattern_field['format'],
       ];
     }
 
@@ -51,9 +50,9 @@ class EmbederatorFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    // limit to embederator
+    // Limit to embederator.
     return (method_exists($field_definition, 'getProvider')
-            && ($field_definition->getProvider() == 'embederator') 
+            && ($field_definition->getProvider() == 'embederator')
             && method_exists($field_definition, 'getName')
             && ($field_definition->getName() == 'embed_id'));
   }

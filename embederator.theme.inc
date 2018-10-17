@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
 
-/*
+/**
  * Prepares variables for aggregator item templates.
  *
  * Default template: embederator.html.twig.
@@ -18,14 +18,14 @@ use Drupal\Core\Render\Element;
  *   - elements: An array of elements to display in view mode.
  */
 function template_preprocess_embederator(&$variables) {
-    $entity = $variables['elements']['#embederator'];
-    
-    $variables['embederator_type'] = Html::cleanCssIdentifier($entity->bundle());
+  $entity = $variables['elements']['#embederator'];
 
-    // Helpful $content variable for templates.
-    foreach (Element::children($variables['elements']) as $key) {
-        $variables['content'][$key] = $variables['elements'][$key];
-    }
+  $variables['embederator_type'] = Html::cleanCssIdentifier($entity->bundle());
+
+  // Helpful $content variable for templates.
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
 }
 
 /**
@@ -40,14 +40,14 @@ function template_preprocess_embederator(&$variables) {
  * @see node_add_page()
  */
 function template_preprocess_embederator_add_list(&$variables) {
-    $variables['types'] = [];
-    if (!empty($variables['content'])) {
-      foreach ($variables['content'] as $type) {
-        $variables['types'][$type->id()]['label'] = $type->label();
-        $variables['types'][$type->id()]['url'] = \Drupal::url('embederator.add', ['embederator_type' => $type->id()]);
-        $variables['types'][$type->id()]['description'] = [
-            '#markup' => $type->getDescription(),
-        ];
-      }
+  $variables['types'] = [];
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->id()]['label'] = $type->label();
+      $variables['types'][$type->id()]['url'] = \Drupal::url('embederator.add', ['embederator_type' => $type->id()]);
+      $variables['types'][$type->id()]['description'] = [
+        '#markup' => $type->getDescription(),
+      ];
     }
   }
+}

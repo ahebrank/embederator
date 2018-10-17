@@ -59,7 +59,7 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
    */
   protected $label;
 
-  
+
   /**
    * A brief description of the practical type.
    *
@@ -80,13 +80,14 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
   public function id() {
     return $this->id;
   }
-  
+
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
     return $this->description;
   }
+
   /**
    * {@inheritdoc}
    */
@@ -95,21 +96,34 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
     return $this;
   }
 
+  /**
+   *
+   */
   public function getMarkup() {
     return $this->embed_markup;
   }
 
+  /**
+   *
+   */
   public function getMarkupHtml() {
     return $this->getMarkup()['value'];
   }
 
+  /**
+   *
+   */
   public function getMarkupFormat() {
     return $this->getMarkup()['format'];
   }
 
+  /**
+   *
+   */
   public function setMarkup($value, $format) {
     $this->embed_markup->value = $value;
     $this->embed_markup->format = $format;
     return $this;
   }
+
 }
