@@ -217,6 +217,7 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
     $fields['label'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Label'))
       ->setDescription(t('An administrative name for this instance of the embed (e.g., "Lunch Menu Form").'))
+      ->setRequired(TRUE)
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
