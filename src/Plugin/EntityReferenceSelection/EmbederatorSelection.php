@@ -33,7 +33,7 @@ class EmbederatorSelection extends DefaultSelection {
   public $entityTypeBundleInfo;
 
   /**
-   * ParagraphSelection constructor.
+   * Constructor.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -240,7 +240,7 @@ class EmbederatorSelection extends DefaultSelection {
       }
     }
 
-    // Support for the paragraphs reference type.
+    // Support for the embederator reference type.
     if (!empty($this->configuration['handler_settings']['target_bundles_drag_drop'])) {
       $drag_drop_settings = $this->configuration['handler_settings']['target_bundles_drag_drop'];
       $max_weight = count($bundles);
