@@ -21,3 +21,6 @@ embederator.embederator_type.*:
         format:
           type: string
           label: 'Format'
+    wrapper_class:
+      type: string
+      label: 'Wrapper class for template'
