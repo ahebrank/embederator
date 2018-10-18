@@ -238,7 +238,7 @@ class Embederator extends ContentEntityBase implements EmbederatorInterface {
     // Embed ID field.
     $fields['embed_id'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Embed ID'))
-      ->setDescription(t('Unique identifier for the embed (e.g., "POsLD3i6vNM")'))
+      ->setDescription(t('Main embed identifier (e.g., "POsLD3i6vNM")'))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
