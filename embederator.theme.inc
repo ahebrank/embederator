@@ -17,15 +17,20 @@ use Drupal\Core\Render\Element;
  *   An associative array containing:
  *   - elements: An array of elements to display in view mode.
  */
-function template_preprocess_embederator(&$variables) {
+function template_preprocess_embederator(array &$variables) {
   $entity = $variables['elements']['#embederator'];
+  $bundle_id = $entity->bundle();
 
-  $variables['embederator_type'] = Html::cleanCssIdentifier($entity->bundle());
+  $variables['embederator_type'] = Html::cleanCssIdentifier($bundle_id);
 
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
+
+  // Add the wrapper class from the entity config.
+  $entity_type = \Drupal::service('entity_type.manager')->getStorage('embederator_type')->load($bundle_id);
+  $variables['wrapper_class'] = $entity_type->getWrapperClass();
 }
 
 /**
@@ -39,7 +44,7 @@ function template_preprocess_embederator(&$variables) {
  *
  * @see node_add_page()
  */
-function template_preprocess_embederator_add_list(&$variables) {
+function template_preprocess_embederator_add_list(array &$variables) {
   $variables['types'] = [];
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {

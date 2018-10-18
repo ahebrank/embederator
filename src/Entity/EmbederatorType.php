@@ -23,7 +23,8 @@ use Drupal\embederator\EmbederatorTypeInterface;
  *     "id",
  *     "label",
  *     "description",
- *     "embed_markup"
+ *     "embed_markup",
+ *     "wrapper_class"
  *   },
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
@@ -75,6 +76,13 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
   protected $embed_markup;
 
   /**
+   * Wrapper class.
+   *
+   * @var string
+   */
+  protected $wrapper_class;
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -97,33 +105,47 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
   }
 
   /**
-   *
+   * Retrieve the markup field.
    */
   public function getMarkup() {
     return $this->embed_markup;
   }
 
   /**
-   *
+   * Retrieve the markup HTML (value).
    */
   public function getMarkupHtml() {
     return $this->getMarkup()['value'];
   }
 
   /**
-   *
+   * Retrieve the markup format.
    */
   public function getMarkupFormat() {
     return $this->getMarkup()['format'];
   }
 
   /**
-   *
+   * Set the markup value and format.
    */
   public function setMarkup($value, $format) {
     $this->embed_markup->value = $value;
     $this->embed_markup->format = $format;
     return $this;
+  }
+
+  /**
+   * Retrieve the wrapper class.
+   */
+  public function getWrapperClass() {
+    return $this->wrapper_class;
+  }
+
+  /**
+   * Retrieve the wrapper class.
+   */
+  public function setWrapperClass($class) {
+    $this->wrapper_class = $class;
   }
 
 }

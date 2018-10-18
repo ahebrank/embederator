@@ -29,7 +29,7 @@
     {{ content.label }}
     {% endif %}
   {{ title_suffix }}
-  <div class="embed">
+  <div class="{{ wrapper_class|default('embed') }}">
     {{ content|without('label') }}
   </div>
 </article>

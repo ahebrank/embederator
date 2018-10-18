@@ -61,6 +61,14 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
       ];
     }
 
+    $form['wrapper_class'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Wrapper class'),
+      '#maxlength' => 255,
+      '#default_value' => $entity_type->getWrapperClass(),
+      '#description' => $this->t('Class(es) for wrapper in template (e.g., "embed--responsive")'),
+    ];
+
     return $this->protectBundleIdElement($form);
   }
 
