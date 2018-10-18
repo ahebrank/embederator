@@ -77,4 +77,13 @@ class EmbederatorListBuilder extends EntityListBuilder {
     return $row + parent::buildRow($entity);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function render() {
+    $build = parent::render();
+    $build['#attached']['library'][] = 'embederator/list';
+    return $build;
+  }
+
 }
