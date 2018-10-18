@@ -6,3 +6,8 @@ preview:
     js/preview.js: {}
   dependencies:
     - core/jquery
+
+list:
+  css:
+    component:
+      css/list.css: {}

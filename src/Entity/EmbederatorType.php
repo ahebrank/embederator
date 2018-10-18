@@ -6,7 +6,9 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\embederator\EmbederatorTypeInterface;
 
 /**
- * Defines the embederator_type entity. A configuration entity used to manage
+ * Defines the embederator_type entity.
+ *
+ * A configuration entity used to manage
  * bundles for the embederator entity.
  *
  * @ConfigEntityType(

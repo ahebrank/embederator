@@ -84,7 +84,7 @@ class EmbederatorUtilities {
       // $vals = $form_state->getValues();
       // $vals['type'] = $bundle_id;
       // $entity = $this->entityTypeManager->getStorage('embederator')->create($vals);
-      // return $this->token->replace($markup, ['embederator' => $entity], ['sanitize' => FALSE]);
+      // return $this->token->replace($markup, ['embederator' => $entity], ['sanitize' => FALSE]);.
       return $markup;
     }
     return NULL;
