@@ -53,7 +53,7 @@ class EmbederatorUtilities {
   public function addFormPreview(&$form, FormStateInterface $form_state) {
     list($entity, $bundle_id) = $this->getEntityConfig($form, $form_state);
     $markup = $this->getPreview($bundle_id, $form_state);
-    if ($markup) {
+    if ($markup && $entity) {
       // Add token identifier.
       foreach (Element::children($form) as $key) {
         $form[$key]['#attributes']['data-embederator-token'] = '[embederator:' . $key . ']';
