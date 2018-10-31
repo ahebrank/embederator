@@ -40,7 +40,6 @@ use Drupal\embederator\EmbederatorTypeInterface;
  *   },
  *   admin_permission = "administer embederator types",
  *   links = {
- *     "canonical" = "/admin/structure/embederator_type/{embederator_type}",
  *     "add-form" = "/admin/structure/embederator_type/add",
  *     "edit-form" = "/admin/structure/embederator_type/{embederator_type}/edit",
  *     "delete-form" = "/admin/structure/embederator_type/{embederator_type}/delete",
