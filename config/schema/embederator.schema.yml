@@ -11,6 +11,9 @@ embederator.embederator_type.*:
     label:
       type: label
       label: 'Label'
+    use_ssi:
+      type: boolean
+      label: 'Use server-side include (vs. markup)'
     embed_markup:
       type: mapping
       label: 'Markup'
@@ -21,6 +24,9 @@ embederator.embederator_type.*:
         format:
           type: string
           label: 'Format'
+    embed_url:
+      type: string
+      label: 'URL for server-side markup include'
     wrapper_class:
       type: string
       label: 'Wrapper class for template'

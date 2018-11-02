@@ -25,7 +25,9 @@ use Drupal\embederator\EmbederatorTypeInterface;
  *     "id",
  *     "label",
  *     "description",
+ *     "use_ssi",
  *     "embed_markup",
+ *     "embed_url",
  *     "wrapper_class"
  *   },
  *   handlers = {
@@ -70,11 +72,25 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
   protected $description;
 
   /**
+   * Whether this is a pure embed or a server-side include from URL.
+   *
+   * @var bool
+   */
+  protected $use_ssi;
+
+  /**
    * Markup skeleton for the embed.
    *
    * @var string
    */
   protected $embed_markup;
+
+  /**
+   * Embed URL, for SSI.
+   *
+   * @var string
+   */
+  protected $embed_url;
 
   /**
    * Wrapper class.
@@ -102,6 +118,21 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
    */
   public function setDescription($description) {
     $this->description = $description;
+    return $this;
+  }
+
+  /**
+   * Server-side include?
+   */
+  public function getUseSsi() {
+    return $this->use_ssi;
+  }
+
+  /**
+   * Set true for server-side include.
+   */
+  public function setUseSsi($use_ssi) {
+    $this->use_ssi = $use_ssi;
     return $this;
   }
 
@@ -136,6 +167,21 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
   }
 
   /**
+   * Get the SSI URL.
+   */
+  public function getEmbedUrl() {
+    return $this->embed_url;
+  }
+
+  /**
+   * Set the SSI URL.
+   */
+  public function setEmbedUrl($url) {
+    $this->embed_url = $url;
+    return $this;
+  }
+
+  /**
    * Retrieve the wrapper class.
    */
   public function getWrapperClass() {
@@ -147,6 +193,7 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
    */
   public function setWrapperClass($class) {
     $this->wrapper_class = $class;
+    return $this;
   }
 
 }

@@ -45,6 +45,13 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
       '#description' => $this->t('Administrative description of this embed type'),
     ];
 
+    $form['use_ssi'] = [
+      '#title' => $this->t('Use server-side include'),
+      '#type' => 'checkbox',
+      '#description' => $this->t('Include HTML from an external URL'),
+      '#default_value' => $entity_type->getUseSsi(),
+    ];
+
     $form['embed_markup'] = [
       '#title' => $this->t('Embed markup'),
       '#type' => 'text_format',
@@ -52,7 +59,29 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
       '#default_value' => $entity_type->getMarkupHtml(),
       '#description' => $this->t('HTML markup for embed (set to Full HTML to avoid markup filters). Use tokens for unique values, e.g., [embederator:embed_id]'),
       '#rows' => 20,
+      '#states' => [
+        'invisible' => [
+          ':input[name="use_ssi"]' => [
+            'checked' => TRUE,
+          ],
+        ],
+      ],
     ];
+
+    $form['embed_url'] = [
+      '#title' => $this->t('Embed URL'),
+      '#type' => 'textfield',
+      '$description' => $this->t('URL for a server-side include'),
+      '#default_value' => $entity_type->getEmbedUrl(),
+      '#states' => [
+        'visible' => [
+          ':input[name="use_ssi"]' => [
+            'checked' => TRUE,
+          ],
+        ],
+      ],
+    ];
+
     if (\Drupal::moduleHandler()->moduleExists('token')) {
       $form['token_browser'] = [
         '#theme' => 'token_tree_link',

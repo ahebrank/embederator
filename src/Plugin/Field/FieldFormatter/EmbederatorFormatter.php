@@ -27,20 +27,43 @@ class EmbederatorFormatter extends FormatterBase {
     /* @todo: inject these services */
     $token = \Drupal::service('token');
     $entity_manager = \Drupal::service('entity_type.manager');
+    $client = \Drupal::service('http_client');
 
     // Get the embed type markup.
     $entity = $items->getEntity();
     $embederator_type = $entity_manager->getStorage('embederator_type')->load($entity->getType());
-    $embed_pattern_field = $embederator_type->getMarkup();
 
-    $elements = [];
-    foreach ($items as $delta => $item) {
-      $markup = $token->replace($embed_pattern_field['value'], ['embederator' => $entity]);
-      $elements[$delta] = [
-        '#type' => 'processed_text',
-        '#text' => $markup,
-        '#format' => $embed_pattern_field['format'],
-      ];
+    if ($embederator_type->getUseSsi()) {
+      $url_pattern = $embederator_type->getEmbedUrl();
+      $elements = [];
+      foreach ($items as $delta => $item) {
+        $url = $token->replace($url_pattern, ['embederator' => $entity]);
+        try {
+          $response = $client->request('GET', $url);
+          $markup = $response->getBody();
+        }
+        catch (Exception $e) {
+          $markup = '<p>Unable to load ' . $url . '</p>';
+        }
+        $elements[$delta] = [
+          '#type' => 'processed_text',
+          '#text' => $markup,
+          '#format' => 'full_html',
+        ];
+      }
+    }
+    else {
+      $embed_pattern_field = $embederator_type->getMarkup();
+
+      $elements = [];
+      foreach ($items as $delta => $item) {
+        $markup = $token->replace($embed_pattern_field['value'], ['embederator' => $entity]);
+        $elements[$delta] = [
+          '#type' => 'processed_text',
+          '#text' => $markup,
+          '#format' => $embed_pattern_field['format'],
+        ];
+      }
     }
 
     return $elements;
