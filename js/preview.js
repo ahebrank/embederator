@@ -7,7 +7,7 @@
     var $wrapper = $target.closest('.form-wrapper');
     var token = $wrapper.data('embederator-token');
     var $form = $target.closest('.embederator-token-form');
-    var $preview = $form.find('.embederator__preview');
+    var $preview = $form.find('.embederator__preview--unhighlighted');
     var markup = $preview.html();
     markup = markup.replace(token, '<span class="highlighted">' + token + '</span>');
     var $newmarkup = $('<div class="embederator__preview--highlighted">');

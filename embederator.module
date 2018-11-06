@@ -54,7 +54,7 @@ function embederator_theme_suggestions_embederator_alter(array &$suggestions, ar
  */
 function embederator_inline_entity_form_entity_form_alter(&$entity_form, FormStateInterface $form_state) {
   if ($entity_form['#entity_type'] == 'embederator') {
-    \Drupal::service('embederator.utilities')->addFormPreview($entity_form, $form_state);
+    \Drupal::service('embederator.utilities')->customizeForm($entity_form, $form_state);
   }
 }
 
@@ -63,6 +63,6 @@ function embederator_inline_entity_form_entity_form_alter(&$entity_form, FormSta
  */
 function embederator_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (strpos($form_id, 'embederator_') === 0) {
-    \Drupal::service('embederator.utilities')->addFormPreview($form, $form_state);
+    \Drupal::service('embederator.utilities')->customizeForm($form, $form_state);
   }
 }

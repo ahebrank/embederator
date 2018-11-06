@@ -11,3 +11,12 @@ list:
   css:
     component:
       css/list.css: {}
+
+parse:
+  css:
+    component:
+      css/parse.css: {}
+  js:
+    js/parse.js: {}
+  dependencies:
+    - core/jquery

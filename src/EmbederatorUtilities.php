@@ -63,8 +63,13 @@ class EmbederatorUtilities {
       $form['preview'] = [
         '#type' => 'fieldset',
         '#title' => $this->t('Embed markup'),
+        '#attributes' => [
+          'class' => [
+            'embederator__preview-wrapper',
+          ],
+        ],
         'html' => [
-          '#markup' => '<div id="' . $dom_id . '" class="embederator__preview">' . Html::escape($markup) . '</div>',
+          '#markup' => '<div id="' . $dom_id . '" class="embederator__preview"><div class="embederator__preview--unhighlighted">' . Html::escape($markup) . '</div></div>',
         ],
         '#weight' => 999,
       ];
@@ -72,6 +77,41 @@ class EmbederatorUtilities {
       $form['#attributes']['class'][] = 'embederator-token-form';
       $form['#attached']['library'][] = 'embederator/preview';
     }
+  }
+
+  /**
+   * Append parsing features.
+   */
+  public function addFormParser(&$form, FormStateInterface $form_state) {
+    if (isset($form['preview'])) {
+      $form['preview']['parse'] = [
+        '#weight' => -99,
+        '#type' => 'container',
+        'paste_launch' => [
+          '#type' => 'markup',
+          '#markup' => '<a class="embederator__paste-launch" href="#">Parse pasted embed code</a>',
+        ],
+        'paste_box' => [
+          '#type' => 'textarea',
+          '#attributes' => [
+            'class' => [
+              'embederator__hidden',
+              'embederator__paste-box',
+            ],
+            'placeholder' => 'Paste embed code...',
+          ],
+        ],
+      ];
+      $form['#attached']['library'][] = 'embederator/parse';
+    }
+  }
+
+  /**
+   * Add form helpers.
+   */
+  public function customizeForm(&$form, FormStateInterface $form_state) {
+    $this->addFormPreview($form, $form_state);
+    $this->addFormParser($form, $form_state);
   }
 
   /**
