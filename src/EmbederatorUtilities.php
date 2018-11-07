@@ -82,22 +82,28 @@ class EmbederatorUtilities {
    */
   public function addFormParser(&$form, $markup) {
     if (isset($form['preview'])) {
+      $show_tokens = $this->t('Toggle to: show tokens in embed');
+      $show_paste = $this->t('Toggle to: parse pasted embed code');
       $form['preview']['parse'] = [
         '#weight' => -99,
         '#type' => 'container',
         'paste_launch' => [
           '#type' => 'markup',
-          '#markup' => '<a class="embederator__paste-launch" href="#">Parse pasted embed code</a>',
+          '#markup' => '<a class="embederator__paste-launch" href="#" data-show-paste="' . $show_paste . '" data-show-tokens="' . $show_tokens . '">' . $show_paste . '</a>',
         ],
         'paste_box' => [
           '#type' => 'textarea',
-          '#attributes' => [
+          '#wrapper_attributes' => [
             'class' => [
               'embederator__hidden',
               'embederator__paste-box',
             ],
+          ],
+          '#attributes' => [
             'placeholder' => $markup,
           ],
+          '#title' => $this->t('Paste embed'),
+          '#description' => $this->t('Embederator will attempt to parse tokens out of a pasted embed.'),
         ],
       ];
       $form['#attached']['library'][] = 'embederator/parse';
@@ -135,10 +141,18 @@ class EmbederatorUtilities {
    * Return entity and bundle_id.
    */
   public function getEntityConfig($form, $form_state) {
+    // IEF form.
     if (isset($form['#bundle'])) {
       $bundle_id = $form['#bundle'];
-      $entity = $form['#default_value'];
+      if ($form['#default_value']) {
+        $entity = $form['#default_value'];
+      }
+      else {
+        $entity_type = $form['#entity_type'];
+        $entity = $this->entityTypeManager->getStorage($entity_type)->create(['type' => $bundle_id]);
+      }
     }
+    // Regular edit form.
     else {
       $entity = $form_state->getFormObject()->getEntity();
       $bundle_id = $entity->bundle();

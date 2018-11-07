@@ -94,14 +94,14 @@
 
   $(document).on('click', '.embederator__paste-launch', function(e) {
     e.preventDefault();
-    $(this).closest('.embederator__preview-wrapper').find('textarea').toggleClass('embederator__hidden');
+    $(this).closest('.embederator__preview-wrapper').find('.embederator__paste-box').toggleClass('embederator__hidden');
     var $preview = $(this).closest('.embederator__preview-wrapper').find('.embederator__preview');
     $preview.toggleClass('embederator__hidden');
-    var launch_text = $preview.hasClass('embederator__hidden') ? 'Show tokens in embed' : 'Parse pasted embed code';
+    var launch_text = $preview.hasClass('embederator__hidden') ? $(this).data('show-tokens') : $(this).data('show-paste');
     $(this).text(launch_text);
   });
 
-  $(document).on('keyup', '.embederator__paste-box', function(e) {
+  $(document).on('keyup', '.embederator__paste-box textarea', function(e) {
     var $wrapper = $(this).closest('.embederator__preview-wrapper');
     var $outerwrapper = $wrapper.closest('.embederator-token-form');
     var markup = $wrapper.find('.embederator__preview--unhighlighted').text();
