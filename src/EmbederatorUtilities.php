@@ -50,9 +50,7 @@ class EmbederatorUtilities {
   /**
    * Append a preview element to the form.
    */
-  public function addFormPreview(&$form, FormStateInterface $form_state) {
-    list($entity, $bundle_id) = $this->getEntityConfig($form, $form_state);
-    $markup = $this->getPreview($bundle_id, $form_state);
+  public function addFormPreview(&$form, $entity, $markup) {
     if ($markup && $entity) {
       // Add token identifier.
       foreach (Element::children($form) as $key) {
@@ -82,7 +80,7 @@ class EmbederatorUtilities {
   /**
    * Append parsing features.
    */
-  public function addFormParser(&$form, FormStateInterface $form_state) {
+  public function addFormParser(&$form, $markup) {
     if (isset($form['preview'])) {
       $form['preview']['parse'] = [
         '#weight' => -99,
@@ -98,7 +96,7 @@ class EmbederatorUtilities {
               'embederator__hidden',
               'embederator__paste-box',
             ],
-            'placeholder' => 'Paste embed code...',
+            'placeholder' => $markup,
           ],
         ],
       ];
@@ -110,8 +108,11 @@ class EmbederatorUtilities {
    * Add form helpers.
    */
   public function customizeForm(&$form, FormStateInterface $form_state) {
-    $this->addFormPreview($form, $form_state);
-    $this->addFormParser($form, $form_state);
+    list($entity, $bundle_id) = $this->getEntityConfig($form, $form_state);
+    $markup = $this->getPreview($bundle_id, $form_state);
+
+    $this->addFormPreview($form, $entity, $markup);
+    $this->addFormParser($form, $markup);
   }
 
   /**
