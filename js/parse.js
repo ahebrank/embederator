@@ -101,7 +101,7 @@
     $(this).text(launch_text);
   });
 
-  $(document).on('keyup', '.embederator__paste-box textarea', function(e) {
+  $(document).on('keyup', '.embederator__paste-box textarea, .embederator__paste-box input', function(e) {
     var $wrapper = $(this).closest('.embederator__preview-wrapper');
     var $outerwrapper = $wrapper.closest('.embederator-token-form');
     var markup = $wrapper.find('.embederator__preview--unhighlighted').text();

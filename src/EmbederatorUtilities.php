@@ -50,24 +50,25 @@ class EmbederatorUtilities {
   /**
    * Append a preview element to the form.
    */
-  public function addFormPreview(&$form, $entity, $markup) {
-    if ($markup && $entity) {
+  public function addFormPreview(&$form, $entity, $embed_pattern, $ssi = FALSE) {
+    if ($embed_pattern && $entity) {
       // Add token identifier.
       foreach (Element::children($form) as $key) {
         $form[$key]['#attributes']['data-embederator-token'] = '[embederator:' . $key . ']';
       }
 
+      $label = $ssi ? $this->t('Embed URL') : $this->t('Embed markup');
       $dom_id = "embederator_" . $entity->id() . '__preview';
       $form['preview'] = [
         '#type' => 'fieldset',
-        '#title' => $this->t('Embed markup'),
+        '#title' => $label,
         '#attributes' => [
           'class' => [
             'embederator__preview-wrapper',
           ],
         ],
         'html' => [
-          '#markup' => '<div id="' . $dom_id . '" class="embederator__preview"><div class="embederator__preview--unhighlighted">' . Html::escape($markup) . '</div></div>',
+          '#markup' => '<div id="' . $dom_id . '" class="embederator__preview"><div class="embederator__preview--unhighlighted">' . Html::escape($embed_pattern) . '</div></div>',
         ],
         '#weight' => 999,
       ];
@@ -80,10 +81,10 @@ class EmbederatorUtilities {
   /**
    * Append parsing features.
    */
-  public function addFormParser(&$form, $markup) {
-    if (isset($form['preview'])) {
-      $show_tokens = $this->t('Toggle to: show tokens in embed');
-      $show_paste = $this->t('Toggle to: parse pasted embed code');
+  public function addFormParser(&$form, $embed_pattern, $ssi = FALSE) {
+    if ($embed_pattern) {
+      $show_tokens = $ssi ? $this->t('Toggle to: show tokens in URL') : $this->t('Toggle to: show tokens in embed');
+      $show_paste = $ssi ? $this->t('Toggle to: parse pasted embed URL') : $this->t('Toggle to: parse pasted embed code');
       $form['preview']['parse'] = [
         '#weight' => -99,
         '#type' => 'container',
@@ -92,7 +93,7 @@ class EmbederatorUtilities {
           '#markup' => '<a class="embederator__paste-launch" href="#" data-show-paste="' . $show_paste . '" data-show-tokens="' . $show_tokens . '">' . $show_paste . '</a>',
         ],
         'paste_box' => [
-          '#type' => 'textarea',
+          '#type' => $ssi ? 'textfield' : 'textarea',
           '#wrapper_attributes' => [
             'class' => [
               'embederator__hidden',
@@ -100,10 +101,10 @@ class EmbederatorUtilities {
             ],
           ],
           '#attributes' => [
-            'placeholder' => $markup,
+            'placeholder' => $embed_pattern,
           ],
-          '#title' => $this->t('Paste embed'),
-          '#description' => $this->t('Embederator will attempt to parse tokens out of a pasted embed.'),
+          '#title' => $ssi ? $this->t('Paste URL') : $this->t('Paste embed'),
+          '#description' => $ssi ? $this->t('Embederator will attempt to parse tokens out of a pasted URL.') : $this->t('Embederator will attempt to parse tokens out of a pasted embed.'),
         ],
       ];
       $form['#attached']['library'][] = 'embederator/parse';
@@ -115,23 +116,21 @@ class EmbederatorUtilities {
    */
   public function customizeForm(&$form, FormStateInterface $form_state) {
     list($entity, $bundle_id) = $this->getEntityConfig($form, $form_state);
-    $markup = $this->getPreview($bundle_id, $form_state);
+    $bundle_config = $this->entityTypeManager->getStorage('embederator_type')->load($bundle_id);
 
-    $this->addFormPreview($form, $entity, $markup);
-    $this->addFormParser($form, $markup);
+    $embed_pattern = $this->getPreview($bundle_config);
+
+    $form['preview'] = [];
+    $this->addFormPreview($form, $entity, $embed_pattern, $bundle_config->getUseSsi());
+    $this->addFormParser($form, $embed_pattern, $bundle_config->getUseSsi());
   }
 
   /**
-   * Build the preview from current form values.
+   * Get the preview markup from current type.
    */
-  public function getPreview($bundle_id, $form_state) {
-    $bundle_config = $this->entityTypeManager->getStorage('embederator_type')->load($bundle_id);
+  public function getPreview($bundle_config) {
     if ($bundle_config) {
-      $markup = $bundle_config->getMarkupHtml();
-      // $vals = $form_state->getValues();
-      // $vals['type'] = $bundle_id;
-      // $entity = $this->entityTypeManager->getStorage('embederator')->create($vals);
-      // return $this->token->replace($markup, ['embederator' => $entity], ['sanitize' => FALSE]);.
+      $markup = $bundle_config->getUseSsi() ? $bundle_config->getEmbedUrl() : $bundle_config->getMarkupHtml();
       return $markup;
     }
     return NULL;
