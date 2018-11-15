@@ -59,10 +59,8 @@ function embederator_inline_entity_form_entity_form_alter(&$entity_form, FormSta
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function embederator_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (strpos($form_id, 'embederator_') === 0) {
-    \Drupal::service('embederator.utilities')->customizeForm($form, $form_state);
-  }
+function embederator_form_embederator_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::service('embederator.utilities')->customizeForm($form, $form_state);
 }
