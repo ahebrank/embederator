@@ -40,7 +40,7 @@ class EmbederatorFormatter extends FormatterBase {
         $url = $token->replace($url_pattern, ['embederator' => $entity]);
         try {
           $response = $client->request('GET', $url);
-          $markup = $response->getBody();
+          $markup = (string) $response->getBody();
         }
         catch (Exception $e) {
           $markup = '<p>Unable to load ' . $url . '</p>';
