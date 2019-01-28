@@ -38,6 +38,8 @@ class EmbederatorFormatter extends FormatterBase {
       $elements = [];
       foreach ($items as $delta => $item) {
         $url = $token->replace($url_pattern, ['embederator' => $entity]);
+        // hook_embederator_url_alter(&$url, $embederator_type, $entity).
+        \Drupal::moduleHandler()->alter('embederator_url', $url, $embederator_type, $entity);
         try {
           $response = $client->request('GET', $url);
           $markup = (string) $response->getBody();
@@ -45,6 +47,8 @@ class EmbederatorFormatter extends FormatterBase {
         catch (Exception $e) {
           $markup = '<p>Unable to load ' . $url . '</p>';
         }
+        // hook_embederator_embed_alter(&$html, $embederator_type, $entity).
+        \Drupal::moduleHandler()->alter('embederator_embed', $markup, $embederator_type, $entity);
         $elements[$delta] = [
           '#type' => 'processed_text',
           '#text' => $markup,
@@ -58,6 +62,8 @@ class EmbederatorFormatter extends FormatterBase {
       $elements = [];
       foreach ($items as $delta => $item) {
         $markup = $token->replace($embed_pattern_field['value'], ['embederator' => $entity]);
+        // hook_embederator_embed_alter(&$html, $embederator_type, $entity).
+        \Drupal::moduleHandler()->alter('embederator_embed', $markup, $embederator_type, $entity);
         $elements[$delta] = [
           '#type' => 'processed_text',
           '#text' => $markup,
