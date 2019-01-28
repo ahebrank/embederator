@@ -30,3 +30,14 @@ embederator.embederator_type.*:
     wrapper_class:
       type: string
       label: 'Wrapper class for template'
+
+field.formatter.settings.embederator_default:
+  type: mapping
+  label: 'Embederator formatter settings'
+  mapping:
+    append_unique_id:
+      type: boolean
+      label: 'Append unique DOM ID'
+    nullify_cache:
+      type: boolean
+      label: 'Force zero-length cache'
