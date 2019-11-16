@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for aggregator item templates.
@@ -49,7 +50,7 @@ function template_preprocess_embederator_add_list(array &$variables) {
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {
       $variables['types'][$type->id()]['label'] = $type->label();
-      $variables['types'][$type->id()]['url'] = \Drupal::url('embederator.add', ['embederator_type' => $type->id()]);
+      $variables['types'][$type->id()]['url'] = Url::fromRoute('embederator.add', ['embederator_type' => $type->id()]);
       $variables['types'][$type->id()]['description'] = [
         '#markup' => $type->getDescription(),
       ];

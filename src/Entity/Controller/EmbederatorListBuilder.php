@@ -71,7 +71,7 @@ class EmbederatorListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /* @var $entity \Drupal\embederator\Entity\Embederator */
     $row['id'] = $entity->id();
-    $row['label'] = $entity->link();
+    $row['label'] = $entity->toLink()->toString();
     $row['bundle'] = $entity->bundle();
     $row['embed_id'] = $entity->getEmbedId();
     return $row + parent::buildRow($entity);

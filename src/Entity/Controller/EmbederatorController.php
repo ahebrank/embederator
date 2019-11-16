@@ -55,14 +55,14 @@ class EmbederatorController extends ControllerBase implements ContainerInjection
       // Hopefully we can steal this theme.
       '#theme' => 'embederator_add_list',
       '#cache' => [
-        'tags' => $this->entityManager()->getDefinition('embederator_type')->getListCacheTags(),
+        'tags' => $this->entityTypeManager()->getDefinition('embederator_type')->getListCacheTags(),
       ],
     ];
 
     $content = [];
 
     // Add all the types.
-    foreach ($this->entityManager()->getStorage('embederator_type')->loadMultiple() as $type) {
+    foreach ($this->entityTypeManager()->getStorage('embederator_type')->loadMultiple() as $type) {
       $content[$type->id()] = $type;
     }
 
@@ -87,7 +87,7 @@ class EmbederatorController extends ControllerBase implements ContainerInjection
    *   An embederator submission form.
    */
   public function add(EmbederatorTypeInterface $embederator_type) {
-    $embed = $this->entityManager()->getStorage('embederator')->create([
+    $embed = $this->entityTypeManager()->getStorage('embederator')->create([
       'type' => $embederator_type->id(),
     ]);
 
