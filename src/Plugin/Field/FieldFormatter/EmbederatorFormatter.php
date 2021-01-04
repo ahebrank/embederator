@@ -5,8 +5,8 @@ namespace Drupal\embederator\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the default embederator (token replacing) formatter.
@@ -26,59 +26,84 @@ class EmbederatorFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    /* @todo: inject these services */
-    $token = \Drupal::service('token');
+    // @TODO: inject these services.
     $entity_manager = \Drupal::service('entity_type.manager');
-    $client = \Drupal::service('http_client');
+    $renderer = \Drupal::service('embederator.render');
+    $settings = $this->getSettings();
 
     // Get the embed type markup.
     $entity = $items->getEntity();
-    $embederator_type = $entity_manager->getStorage('embederator_type')->load($entity->getType());
+    $type = $entity->getType();
+    $embederator_type = $entity_manager->getStorage('embederator_type')->load($type);
 
-    if ($embederator_type->getUseSsi()) {
-      $url_pattern = $embederator_type->getEmbedUrl();
-      $elements = [];
-      foreach ($items as $delta => $item) {
-        $url = $token->replace($url_pattern, ['embederator' => $entity]);
-        // hook_embederator_url_alter(&$url, $embederator_type, $entity).
-        \Drupal::moduleHandler()->alter('embederator_url', $url, $embederator_type, $entity);
-        try {
-          $response = $client->request('GET', $url);
-          $markup = (string) $response->getBody();
-          $markup = $this->uniquify($markup);
-        }
-        catch (Exception $e) {
-          $markup = '<p>Unable to load ' . $url . '</p>';
-        }
-        // hook_embederator_embed_alter(&$html, $embederator_type, $entity).
-        \Drupal::moduleHandler()->alter('embederator_embed', $markup, $embederator_type, $entity);
+    // Hook context.
+    $context = [
+      'embederator_type' => $embederator_type,
+      'entity' => $entity,
+      'settings' => $settings,
+    ];
+
+    $elements = [];
+
+    // Determine laziness.
+    $loadstyle = $this->getSetting('loadstyle');
+    if ($loadstyle == 'noquery') {
+      // Unset lazyload if query parameters are present.
+      $qp = \Drupal::request()->query->all();
+      $loadstyle = count($qp) ? '' : 'lazy';
+    }
+
+    // Allow modification of lazylaod per embed.
+    \Drupal::moduleHandler()->alter('embederator_lazyload', $loadstyle, $context);
+
+    foreach ($items as $delta => $item) {
+      if ($loadstyle == 'lazy') {
         $elements[$delta] = [
-          '#type' => 'processed_text',
-          '#text' => $markup,
-          '#format' => 'full_html',
+          '#type' => 'inline_template',
+          '#template' => '<div data-embederator-lazyload="' . $entity->id() . '" data-embederator-type="' . $type . '" data-embederator-settings="' . urlencode(json_encode($settings)) . '">Loading...</div>',
+          '#attached' => [
+            'library' => [
+              'embederator/lazyload',
+            ],
+          ],
         ];
       }
-    }
-    else {
-      $embed_pattern_field = $embederator_type->getMarkup();
-
-      $elements = [];
-      foreach ($items as $delta => $item) {
-        $markup = $token->replace($embed_pattern_field['value'], ['embederator' => $entity]);
-        $markup = $this->uniquify($markup);
-        // hook_embederator_embed_alter(&$html, $embederator_type, $entity).
-        \Drupal::moduleHandler()->alter('embederator_embed', $markup, $embederator_type, $entity);
+      elseif ($loadstyle == 'iframe') {
+        $path = '/embederator/lazyload/' . $entity->id() . '/' . urlencode(json_encode($settings));
+        $url = Url::fromUserInput($path);
+        $initial_height = $this->getSetting('initial_height') ?? '500';
+        $url_string = $url->toString();
+        // Inject any query parameters into the src from the outer page.
+        $qparams = \Drupal::request()->query->all();
+        unset($qparams['q']);
+        if ($qparams) {
+          $url_string .= '?' . http_build_query($qparams);
+        }
         $elements[$delta] = [
-          '#type' => 'processed_text',
-          '#text' => $markup,
-          '#format' => $embed_pattern_field['format'],
+          '#type' => 'inline_template',
+          '#template' => '<iframe data-embederator-iframe-proxy="' . $entity->id() . '" data-embederator-type="' . $type . '" title="Embederator iframe of type ' . $type . '" class="embederator-iframe-proxy" src="' . $url_string . '" height="' . $initial_height . '">Loading...</iframe>',
+          '#attached' => [
+            'library' => [
+              'embederator/iframe',
+            ],
+          ],
         ];
+      }
+      else {
+        if ($embederator_type->getUseSsi()) {
+          $markup = $renderer->getSsiMarkup($embederator_type, $entity, $settings);
+        }
+        else {
+          $markup = $renderer->getEmbedMarkup($embederator_type, $entity, $settings);
+        }
+        $elements[$delta] = $renderer->generateElement($markup);
       }
     }
 
     if ($this->getSetting('nullify_cache')) {
       $elements['#cache']['max-age'] = 0;
     }
+
     return $elements;
   }
 
@@ -102,7 +127,13 @@ class EmbederatorFormatter extends FormatterBase {
       $summary[] = $this->t('Append unique hash to form DOM IDs.');
     }
     if ($this->getSetting('nullify_cache')) {
-      $summary[] = $this->t('Zero cache.');
+      $summary[] = $this->t('Zero the cache.');
+    }
+    if ($lazy = $this->getSetting('loadstyle')) {
+      $summary[] = $this->t('Load embed options: %lazy', ['%lazy' => $lazy]);
+      if (($lazy == 'iframe') && ($height = $this->getSetting('initial_height'))) {
+        $summary[] = $this->t('Iframe initial height: %height', ['%height' => $height]);
+      }
     }
     return $summary;
   }
@@ -114,6 +145,8 @@ class EmbederatorFormatter extends FormatterBase {
     return [
       'append_unique_id' => FALSE,
       'nullify_cache' => FALSE,
+      'loadstyle' => '',
+      'initial_height' => 500,
     ] + parent::defaultSettings();
   }
 
@@ -133,40 +166,30 @@ class EmbederatorFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('nullify_cache'),
     ];
 
+    $element['loadstyle'] = [
+      '#title' => $this->t('Embed load options'),
+      '#type' => 'select',
+      '#default_value' => $this->getSetting('loadstyle'),
+      '#options' => [
+        '' => $this->t('None'),
+        'lazy' => $this->t('Lazy load'),
+        'noquery' => $this->t('Lazy if no query params'),
+        'iframe' => $this->t('Iframe proxy'),
+      ],
+    ];
+
+    $element['initial_height'] = [
+      '#title' => $this->t('Iframe initial height'),
+      '#type' => 'number',
+      '#default_value' => $this->getSetting('initial_height'),
+      '#states' => [
+        'visible' => [
+          'select[name$="[loadstyle]"]' => ['value' => 'iframe'],
+        ],
+      ],
+    ];
+
     return $element;
-  }
-
-  /**
-   * Add a random suffix to ID attributes in DOM markup.
-   *
-   * See e.g., https://api.drupal.org/api/drupal/core%21modules%21filter%21src%21Plugin%21Filter%21FilterHtml.php/function/FilterHtml%3A%3AfilterAttributes/8.2.x.
-   */
-  protected function uniquify($html) {
-    if ($this->getSetting('append_unique_id')) {
-      $suffix = uniqid();
-
-      // Collect all the IDs and make their replacements.
-      $html_dom = Html::load($html);
-      $xpath = new \DOMXPath($html_dom);
-      foreach ($xpath->query('//*[@id]') as $element) {
-        // Only form inputs.
-        if (!$element->hasAttribute('name')) {
-          continue;
-        }
-        $orig_id = $element->getAttribute('id');
-        $new_id = $orig_id . "-" . $suffix;
-        foreach ($xpath->query('//*[@for="' . $orig_id . '"]') as $for_element) {
-          $for_element->setAttribute('for', $new_id);
-        }
-        $element->setAttribute('id', $new_id);
-      }
-
-      $text = Html::serialize($html_dom);
-      $html = trim($text);
-    }
-
-    // Run the replacements on the markup.
-    return $html;
   }
 
 }

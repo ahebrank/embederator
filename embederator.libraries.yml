@@ -20,3 +20,19 @@ parse:
     js/parse.js: {}
   dependencies:
     - core/jquery
+
+lazyload:
+  js:
+    js/lazyload.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+iframe:
+  js:
+    js/iframeResizer.min.js: { minified: true }
+    js/iframeResizerInit.js: {}
+  css:
+    component:
+      css/iframe.css: {}
+

@@ -106,3 +106,11 @@ entity.embederator_type.collection:
   requirements:
   # Checks for permission directly.
     _permission: 'administer embederator types'
+
+embederator.lazyload:
+  path: '/embederator/lazyload/{embederator}/{settings_json}'
+  defaults:
+    _controller: '\Drupal\embederator\Controller\AjaxRender::render'
+    settings_json: ''
+  requirements:
+    _entity_access: 'embederator.view'

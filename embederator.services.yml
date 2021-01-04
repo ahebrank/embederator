@@ -2,3 +2,6 @@ services:
   embederator.utilities:
     class: Drupal\embederator\EmbederatorUtilities
     arguments: ['@entity_type.manager', '@token']
+  embederator.render:
+    class: Drupal\embederator\EmbederatorRender
+    arguments: ['@http_client', '@token', '@module_handler']

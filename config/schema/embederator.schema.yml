@@ -41,3 +41,6 @@ field.formatter.settings.embederator_default:
     nullify_cache:
       type: boolean
       label: 'Force zero-length cache'
+    loadstyle:
+      type: string
+      label: 'Async loading options'

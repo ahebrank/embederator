@@ -78,6 +78,7 @@ class EmbederatorType extends ConfigEntityBundleBase implements EmbederatorTypeI
    */
   protected $use_ssi;
 
+
   /**
    * Markup skeleton for the embed.
    *

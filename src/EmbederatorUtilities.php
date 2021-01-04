@@ -159,4 +159,35 @@ class EmbederatorUtilities {
     return [$entity, $bundle_id];
   }
 
+  /**
+   * Add a random suffix to ID attributes in DOM markup.
+   *
+   * See e.g., https://api.drupal.org/api/drupal/core%21modules%21filter%21src%21Plugin%21Filter%21FilterHtml.php/function/FilterHtml%3A%3AfilterAttributes/8.2.x.
+   */
+  public function uniquify($html) {
+    $suffix = uniqid();
+
+    // Collect all the IDs and make their replacements.
+    $html_dom = Html::load($html);
+    $xpath = new \DOMXPath($html_dom);
+    foreach ($xpath->query('//*[@id]') as $element) {
+      // Only form inputs.
+      if (!$element->hasAttribute('name')) {
+        continue;
+      }
+      $orig_id = $element->getAttribute('id');
+      $new_id = $orig_id . "-" . $suffix;
+      foreach ($xpath->query('//*[@for="' . $orig_id . '"]') as $for_element) {
+        $for_element->setAttribute('for', $new_id);
+      }
+      $element->setAttribute('id', $new_id);
+    }
+
+    $text = Html::serialize($html_dom);
+    $html = trim($text);
+
+    // Run the replacements on the markup.
+    return $html;
+  }
+
 }

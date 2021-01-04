@@ -64,3 +64,12 @@ function embederator_inline_entity_form_entity_form_alter(&$entity_form, FormSta
 function embederator_form_embederator_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   \Drupal::service('embederator.utilities')->customizeForm($form, $form_state);
 }
+
+/**
+ * Implements hook_embederator_embed_alter().
+ */
+function embederator_embederator_embed_alter(&$html, &$context) {
+  if ($context['settings']['append_unique_id']) {
+    $html = \Drupal::service('embederator.utilities')->uniquify($html);
+  }
+}

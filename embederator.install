@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * Modify lazyload configuration for new iframe option.
+ */
+function embederator_update_8201() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('core.entity_view_display.embederator.') as $name) {
+    $config = $config_factory->getEditable($name);
+    $content = $config->get('content');
+    if (isset($content['embed_id'])) {
+      if (isset($content['embed_id']['settings']['lazyload'])) {
+        $lazy = $content['embed_id']['settings']['lazyload'];
+        $load = $lazy;
+        if ($lazy == 'yes') {
+          $load = 'lazy';
+        }
+        $content['embed_id']['settings']['loadstyle'] = $load;
+        unset($content['embed_id']['settings']['lazyload']);
+        $config->set('content', $content);
+        $config->save();
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\field_ui\FieldUI;
 
 /**
- *
+ * Create and edit an embed type.
  */
 class EmbederatorTypeForm extends BundleEntityFormBase {
 
@@ -126,9 +126,6 @@ class EmbederatorTypeForm extends BundleEntityFormBase {
 
   /**
    * Form submission handler to redirect to Manage fields page of Field UI.
-   *
-   * @param array $form
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
    */
   public function redirectToFieldUi(array $form, FormStateInterface $form_state) {
     $route_info = FieldUI::getOverviewRouteInfo($this->entity->getEntityType()->getBundleOf(), $this->entity->id());
